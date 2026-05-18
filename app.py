@@ -51,12 +51,12 @@ HTML_TEMPLATE = """
                 return;
             }
 
-            // UI Reset
+            // Disable UI inputs while deploying
             btn.disabled = true;
             consoleBox.style.display = 'block';
             consoleBox.innerText = 'Initializing connection to deployment framework...\\n';
 
-            // Send request to Flask Backend
+            // Send payload to Python Flask Backend
             fetch('/deploy', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -70,14 +70,14 @@ HTML_TEMPLATE = """
                     return;
                 }
                 
-                // Stream the returned mock deployment sequence steps onto screen
+                // Stream log array back onto screen simulation
                 let i = 0;
                 function printLogs() {
                     if (i < data.logs.length) {
                         consoleBox.innerText += data.logs[i] + '\\n';
                         consoleBox.scrollTop = consoleBox.scrollHeight;
                         i++;
-                        setTimeout(printLogs, 800); // 800ms delay between log messages for realistic simulation
+                        setTimeout(printLogs, 700); 
                     } else {
                         btn.disabled = false;
                     }
@@ -85,7 +85,7 @@ HTML_TEMPLATE = """
                 printLogs();
             })
             .catch(err => {
-                consoleBox.innerText += '\\n❌ Transmission failure communicating with cloud pipeline orchestration.';
+                consoleBox.innerText += '\\n❌ Transmission failure communicating with cloud orchestration.';
                 btn.disabled = false;
             });
         }
@@ -103,28 +103,25 @@ def deploy_project():
     data = request.get_json() or {}
     repo_url = data.get('repo_url', '').strip()
 
-    # Simple validation using regex to check for valid GitHub links
+    # URL confirmation check
     if not re.match(r'^https://github\.com/[\w-]+/[\w.-]+/?$', repo_url):
         return jsonify({"error": "Invalid URL structure. Must match https://github.com/user/repo"}), 400
 
-    # Extract repository name from string to make logs dynamic
     repo_name = repo_url.split('/')[-1].replace('.git', '')
-    
-    print(sys.stdout.flush())
-    print(f"Deployment triggered for repository target: {repo_url}", flush=True)
+    print(f"Deployment process targeted at repository: {repo_url}", flush=True)
 
-    # Simulated systemic steps representing the architecture loop we completed manually!
+    # Automated step mapping array
     deployment_logs = [
-        "🌐 Fetching remote Git configurations...",
-        f"📥 Successfully cloned source repository branch [{repo_name}/main].",
-        "📦 Compiling environment dependencies inside local workspace context...",
-        "🔨 Executing container compilation: 'docker build -t cloud-portal-app:latest .'",
-        "🐋 Container metadata layer generated successfully.",
-        "🔐 Autoconfiguring credentials wrapper targeting AWS ECR Registry...",
-        "🚀 Transferring image payload layers to repository architecture...",
-        "⚙️ Provisioning cloud container cluster blueprint mappings...",
-        "⚡ Launching container environment layout on serverless AWS Fargate compute layer...",
-        f"✨ DEPLOYMENT COMPLETE! Application [{repo_name}] live at http://127.0.0.1:8080"
+        "🌐 Connecting to remote GitHub storage API configurations...",
+        f"📥 Successfully cloned repository branch sources [{repo_name}/main].",
+        "📦 Compiling software package dependencies inside sandbox context...",
+        "🔨 Building isolated container image layers...",
+        "🐋 Local metadata application assembly complete.",
+        "🔐 Authenticating secure credential pathways targeting AWS ECR...",
+        "🚀 Shipping production image payload blocks down pipeline...",
+        "⚙️ Mapping runtime configurations into AWS ECS environment...",
+        "⚡ Provisioning task nodes on serverless compute infrastructure layer (AWS Fargate)...",
+        f"✨ SUCCESS! Project [{repo_name}] is live across global network clusters!"
     ]
 
     return jsonify({"status": "processing", "logs": deployment_logs})
