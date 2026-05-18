@@ -1,14 +1,15 @@
-# Use an official Python runtime as a parennt image
+# app.py
+import time
+import sys
 
-FROM python:3.9-slim
+print("====================================================")
+print("Cloud Deployment Portal Base Engine Initialized Live!")
+print("====================================================")
 
-# Set the working directory in the container
-
-WORKDIR /app
-
-# Copy the current directory contents into the container at /app
-
-COPY . /app
-
-# Run app.py when the container launches
-CMD ["python", "app.py"]
+# This continuous loop keeps your container awake forever on AWS
+try:
+    while True:
+        sys.stdout.flush() # Forces logs to write to CloudWatch instantly
+        time.sleep(60)     # Sleeps for 1 minute, then stays awake
+except KeyboardInterrupt:
+    print("Server shutting down gracefully.")
