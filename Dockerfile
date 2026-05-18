@@ -1,15 +1,8 @@
-# app.py
-import time
-import sys
+# Dockerfile
+FROM python:3.9-slim
 
-print("====================================================")
-print("Cloud Deployment Portal Base Engine Initialized Live!")
-print("====================================================")
+WORKDIR /app
 
-# This continuous loop keeps your container awake forever on AWS
-try:
-    while True:
-        sys.stdout.flush() # Forces logs to write to CloudWatch instantly
-        time.sleep(60)     # Sleeps for 1 minute, then stays awake
-except KeyboardInterrupt:
-    print("Server shutting down gracefully.")
+COPY app.py .
+
+CMD ["python", "app.py"]
